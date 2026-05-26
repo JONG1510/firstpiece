@@ -68,3 +68,152 @@
 
 </body>
 </html>
+
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Raw Data to Business Insights — Austin Bikeshare with dbt</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #fafaf7;
+    --cream: #f5f0e8;
+    --accent: #c84b31;
+    --accent2: #2e86ab;
+    --accent3: #4caf50;
+    --muted: #6b7280;
+    --border: #e0d8cc;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+    --highlight: #fff3cd;
+    --step-active: #c84b31;
+    --step-done: #4caf50;
+    --step-idle: #d1cec8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: #fff;
+    padding: 64px 40px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, rgba(200,75,49,.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 75% 20%, rgba(46,134,171,.2) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,.7);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    font-weight: 300;
+  }
+  .hero-bikes {
+    font-size: 2.5rem;
+    letter-spacing: .5em;
+    opacity: .6;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── PROGRESS STEPPER ── */
+  .stepper-wrap {
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .stepper {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .stepper::-webkit-scrollbar { display: none; }
+  .step-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--muted);
+    position: relative;
+  }
+  .step-pill:hover { color: var(--ink); background: rgba(0,0,0,.03); }
+  .step-pill.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--step-idle);
+    color: #fff;
+    font-size: .7rem;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: background .2s;
+  }
+  .step-pill.active .step-num { background: var(--accent); }
+  .step-pill.done .step-num { background: var(--step-done); }
+  .step-pill.done .step-num::after { content: '✓'; }
+  .step-pill.done .step-num span { display: none; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 48px 0 64px; animation: fadeUp .35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
