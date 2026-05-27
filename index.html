@@ -1,148 +1,174 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>From Raw Data to Business Insights — Austin Bikeshare with dbt</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1a1a2e;
-    --paper: #fafaf7;
-    --cream: #f5f0e8;
-    --accent: #c84b31;
-    --accent2: #2e86ab;
-    --accent3: #4caf50;
-    --muted: #6b7280;
-    --border: #e0d8cc;
-    --code-bg: #1e1e2e;
-    --code-text: #cdd6f4;
-    --highlight: #fff3cd;
-    --step-active: #c84b31;
-    --step-done: #4caf50;
-    --step-idle: #d1cec8;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to One Piece !!</title>
+    <style>
+        :root {
+            --bg-cream: #fbf9f1;
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --text-dark: #1f2937;
+            --text-muted: #4b5563;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  body {
-    font-family: 'Lato', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.7;
-    font-size: 16px;
-  }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 1rem;
+        }
 
-  /* ── HERO ── */
-  .hero {
-    background: var(--ink);
-    color: #fff;
-    padding: 64px 40px 56px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 60%, rgba(200,75,49,.25) 0%, transparent 60%),
-                radial-gradient(ellipse at 75% 20%, rgba(46,134,171,.2) 0%, transparent 55%);
-    pointer-events: none;
-  }
-  .hero-tag {
-    display: inline-block;
-    font-family: 'Source Code Pro', monospace;
-    font-size: 11px;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 3px 10px;
-    border-radius: 2px;
-    margin-bottom: 20px;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-  .hero h1 span { color: var(--accent); }
-  .hero p {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,.7);
-    max-width: 600px;
-    margin: 0 auto 32px;
-    font-weight: 300;
-  }
-  .hero-bikes {
-    font-size: 2.5rem;
-    letter-spacing: .5em;
-    opacity: .6;
-  }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-  /* ── LAYOUT ── */
-  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
 
-  /* ── PROGRESS STEPPER ── */
-  .stepper-wrap {
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-    padding: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,.06);
-  }
-  .stepper {
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 16px;
-  }
-  .stepper::-webkit-scrollbar { display: none; }
-  .step-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 16px;
-    cursor: pointer;
-    white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    transition: all .2s;
-    font-size: .85rem;
-    font-weight: 700;
-    color: var(--muted);
-    position: relative;
-  }
-  .step-pill:hover { color: var(--ink); background: rgba(0,0,0,.03); }
-  .step-pill.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-  .step-num {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--step-idle);
-    color: #fff;
-    font-size: .7rem;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-    flex-shrink: 0;
-    transition: background .2s;
-  }
-  .step-pill.active .step-num { background: var(--accent); }
-  .step-pill.done .step-num { background: var(--step-done); }
-  .step-pill.done .step-num::after { content: '✓'; }
-  .step-pill.done .step-num span { display: none; }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
 
-  /* ── SECTIONS ── */
-  .section { display: none; padding: 48px 0 64px; animation: fadeUp .35s ease; }
-  .section.active { display: block; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+        /* Live Clock Container */
+        #clock-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(30, 58, 138, 0.08);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(30, 58, 138, 0.15);
+        }
+
+        /* Media Container */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 2rem 0;
+        }
+
+        .media-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.1), 0 8px 10px -6px rgba(30, 58, 138, 0.1);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .media-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .media-caption {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--secondary-blue);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1> Luffy says "Im going to be the King of Pirates!"</h1>
+        <p class="subtitle">Set sail on a grand adventure across the Grand Line!</p>
+        
+        <!-- Live Date & Time -->
+        <div id="clock-container">
+            <span id="live-clock">Loading live time...</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="media-card">
+            <!-- Replace the src URL below with your choice of GIF or image URL -->
+            <img src="https://media.giphy.com/media/VwpkFDijz3Bny/giphy.gif" alt="One Piece Media Element">
+            <p class="media-caption">"If you don't take risks, you can't create a future!" — Monkey D. Luffy</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Hosted with 💙 on GitHub Pages</p>
+    </footer>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            // Format options for local date and time display
+            const options = { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true 
+            };
+            
+            document.getElementById('live-clock').textContent = now.toLocaleString('en-US', options);
+        }
+
+        // Update the clock immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
