@@ -70,19 +70,20 @@
         }
 
         /* Media Container */
+        /* 1. Expand the main container layout to 2/3 (approx 66%) of the screen */
         .main-content {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 66vw; /* Uses 66% of the viewport width */
             margin: 2rem 0;
         }
 
         .media-card {
             background: var(--card-bg);
-            padding: 1rem;
+            padding: 1.5rem; /* Slightly more breathing room inside the card */
             border-radius: 16px;
             box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.1), 0 8px 10px -6px rgba(30, 58, 138, 0.1);
             border: 1px solid var(--border-color);
@@ -92,11 +93,12 @@
             align-items: center;
         }
 
+        /* 2. Fix the image formatting to stop the squashing */
         .media-card img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;        /* Make sure it scales nicely to fill the wider card */
+            height: auto;       /* Let the height adjust naturally based on the image's shape */
+            object-fit: contain; /* Prevents cropping or stretching; keeps true proportions */
             border-radius: 8px;
-            object-fit: cover;
         }
 
         .media-caption {
@@ -127,7 +129,7 @@
 
     <header>
         <h1> Welcome to Shangri La Frontier ~ </h1>
-        <p class="subtitle">Seeking the ultimate adventure!</p>
+        <p class="subtitle"> Seeking the ultimate adventure! </p>
         
         <!-- Live Date & Time -->
         <div id="clock-container">
@@ -139,7 +141,7 @@
         <div class="media-card">
             <img src="SLF_7.png" alt="SLF Media">
             
-            <p class="media-caption">"Join the Wolf Pack!" — Arthur Pentagon</p>
+            <p class="media-caption">"Join the Wolf Pack!" — Arthur Pencilgon</p>
             
             <a href="https://app.thestorygraph.com/books/c4d891d0-0760-4cbf-80b7-a466833c60cc" target="_blank" class="photo-link">Visit the Official Website</a>
         </div>
