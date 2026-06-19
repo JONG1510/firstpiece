@@ -1,0 +1,17 @@
+- name: "Boa Hancock (Parallel)"
+  card_id: "OP01-078"
+  image: "https://images.example.com/boa1.jpg" # Replace with real image URLs
+  character: "Boa"
+  target_price: "$15 - $20"
+  status: "Not Yet"
+  price_paid: 0
+
+- name: "Monkey D. Luffy"
+  card_id: "ST01-001"
+  image: "https://images.example.com/luffy1.jpg"
+  character: "Luffy"
+  target_price: "$5"
+  status: "Bought"
+  price_paid: 4.50
+
+# Add more cards here. The code below handles everything automatically!
